@@ -60,21 +60,22 @@ class GetInfoFromFacebook
   
   def initialize
     Info.destroy_all
+    Facebook.destroy_all
     uri = URI.parse(URL)
     open(uri).read.match(/=/)
     url = URI.escape("https://graph.facebook.com/331378793553152/links?access_token=#{$'}")
     uri = URI.parse(url)
     json = open(uri).read
     ref = JSON.parse(json)
-    ref['data'].each do |info|
+    ref['data'].each do |fb|
       obj = 'link'
-      obj = 'event' if /event/ =~ info['link'].to_s
-      obj = 'other' if info['id'] == "235954356515818" or info['id'] == "424671060897706"
-      Info.create(fb_id: info['id'], object: obj, 
-                message: info['message'].to_s.gsub(/(http[\S]+)/, '').sub(/^\n/, '').sub(/[\n|\S]\z/m, ''), 
-                name: info['name'], 
-                description: info['description'].to_s.gsub(/(http[\S]+)/, '').sub(/^\n/, '').sub(/[\n|\S]\z/m, ''), 
-                link: info['link'], date: Time.parse(info['created_time']))
+      obj = 'event' if /event/ =~ fb['link'].to_s
+      obj = 'other' if fb['id'] == "235954356515818" or fb['id'] == "424671060897706"
+      Facebook.create(fb_id: fb['id'], object: obj, 
+                message: fb['message'].to_s.gsub(/(http[\S]+)/, '').sub(/^\n/, '').sub(/[\n|\S]\z/m, ''), 
+                name: fb['name'], 
+                description: fb['description'].to_s.gsub(/(http[\S]+)/, '').sub(/^\n/, '').sub(/[\n|\S]\z/m, ''), 
+                link: fb['link'], date: Time.parse(fb['created_time']))
     end
   end
 end

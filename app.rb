@@ -2,7 +2,7 @@
 require 'koala'
 
 require './lib/mongoid'
-require './models/info'
+require './models/facebook'
 require './models/event'
 
 =begin
@@ -30,9 +30,9 @@ set :haml, :format => :html5
 
 if ENV['MEMCACHIER_SERVERS']
   use Rack::Cache,
-	  verbose:     true,
-	  default_ttl: 60 * 60 * 24,
-	  metastore:   ENV['MEMCACHIER_SERVERS'] ? "memcached://#{ENV['MEMCACHIER_SERVERS']}/meta" : 'file:tmp/cache/rack/meta',
+	  verbose: true,
+	  default_ttl: 60 * 60 * 12,
+	  metastore: Dalli::Client.new(ENV["MEMCACHIER_SERVERS"], {username: ENV["MEMCACHIER_USERNAME"], password: ENV["MEMCACHIER_PASSWORD"]}),
 	  entitystore: ENV['MEMCACHIER_SERVERS'] ? "memcached://#{ENV['MEMCACHIER_SERVERS']}/body" : 'file:tmp/cache/rack/body',
 	  allow_reload: false
 end
@@ -79,15 +79,15 @@ helpers do
     @events = Event.where(category: 'atnd')
   end
   
-  def infomation
-    @info ||= settings.cache.fetch("info_#{Date.today.to_s}") do
-      info = []
-      Info.all_of(object: 'link').each_with_index do |item, i|
-        info[i/3] = [] if i % 3 == 0
-        info[i/3][i%3] = item
+  def facebook
+    @facebook ||= settings.cache.fetch("facebook_#{Date.today.to_s}") do
+      facebook = []
+      Facebook.all_of(object: 'link').each_with_index do |item, i|
+        facebook[i/3] = [] if i % 3 == 0
+        facebook[i/3][i%3] = item
       end
-      settings.cache.set("info_#{Date.today.to_s}", info, 60*60*24)
-      info
+      settings.cache.set("facebook_#{Date.today.to_s}", facebook, 60*60*24)
+      facebook
     end
   end
 end
@@ -96,7 +96,7 @@ get "/" do
   cache_control :public, max_age: 60 * 60 * 24
   
   events
-  infomation
+  facebook
   
   sass :style
   haml :index 
@@ -116,7 +116,7 @@ end
 
 =begin
 get '/daleteall' do
-  Event.destroy_all
+#  Event.destroy_all
 #  Info.destroy_all
   redirect '/'
 end

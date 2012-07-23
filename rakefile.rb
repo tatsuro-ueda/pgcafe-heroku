@@ -22,6 +22,7 @@ desc 'Get Info from Facebook.'
 task :get_info_from_facebook do
   require './lib/get_info'
   require './lib/mongoid'
+  require './models/facebook'
   require './models/info'
   GetInfoFromFacebook.new
   puts 'done.'
