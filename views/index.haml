@@ -1,0 +1,151 @@
+!!!
+%html
+  %head
+    %meta{charset: 'UTF-8'}
+    %meta{name: 'viewport', content: 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1'}
+    %title プログラマーズカフェ
+    %meta{name: 'description', content: ''}
+    %meta{name: 'author', content: ''}
+    %link{rel: 'icon', href: 'images/favicon.ico', type: 'image/x-icon'}
+    %link{rel: 'shortcut icon', href: 'images/favicon.ico', type: 'image/x-icon'}
+    %link{rel: 'stylesheet', href: 'bootstrap/css/bootstrap.min.css', type: 'text/css'}
+    %link{rel: 'stylesheet', href: 'bootstrap/css/bootstrap-responsive.min.css', type: 'text/css'}
+    %link{rel: 'stylesheet', href: 'style.css', type: 'text/css'}
+    /[if IE]
+      %script{type: 'text/javascript', src: 'http://html5shim.googlecode.com/svn/trunk/html5.js'}
+  %body
+    .container
+      .row-fluid
+        .hero-unit.title
+          %h1.title<
+            ちょっと勉強、ちょっとひと休み
+            %br>
+            %img.title{src: "images/logo-title.png", width: "50%"}<>
+            %br>
+            &nbsp;毎週木曜、三鷹にて。
+      .row-fluid
+        .span8
+          .accordion#info
+            .accordion-group
+              .accordion-heading
+                %h2<
+                  %a.accordion-toggle{:href => "#collapseOne", :'data-parent' => "#info", :'data-toggle' => "collapse"} Info
+              .accordion-body.collapse.in#collapseOne
+                .accordion-inner
+                  %p 日時：毎週木曜日 15〜18時
+                  %p<
+                    場所：コワーキングプロジェクト
+                    %a{href: "http://mitacafe.co/"} ミタカフェ
+                    %a.btn.btn-mini.btn-info{href: "#map"} 地図 &raquo;
+                  %p<
+                    料金：
+                    %a{href: "http://www.mitaka.ne.jp/", target: "_blank"}<> まちづくり三鷹
+                    のご厚意により
+                    %strong> 無料
+                  %p<
+                    Facebook：
+                    %a{href: "https://www.facebook.com/pgcafe", target: "_blank"}<> www.facebook.com/pgcafe
+                  %p<
+                    ハッシュダグ：
+                    %a{href: "https://twitter.com/search/%23pgcafe", target: "_blank"}<> #pgcafe
+            .accordion-group
+              .accordion-heading
+                %h2<
+                  %a.accordion-toggle{:href => "#collapseTwo", :'data-parent' => "#info", :'data-toggle' => "collapse"} About
+              .accordion-body.collapse#collapseTwo
+                .accordion-inner
+                  %p プログラマーズカフェは、プログラミングに関わるあらゆる人たちが集い、交流する場所を提供するボランティア団体です。
+                  %p<
+                    毎週木曜日の15～18時、コワーキングプロジェクト
+                    %a{href: "http://mitacafe.co/", target: "_blank"} ミタカフェ
+                    の一部を借りて開催しています。
+                  %p<
+                    18時からは産業プラザ1階のカフェ「
+                    %a{href: "http://www.hi-famiglia.com/", target: "_blank"}<> Cafe Hi Famiglia
+                    」にて、二次会のようなおしゃべり会も開催しています。
+            .accordion-group
+              .accordion-heading
+                %h2<
+                  %a.accordion-toggle{:href => "#collapseThree", :'data-parent' => "#info", :'data-toggle' => "collapse"} 参加するその前に…
+              .accordion-body.collapse#collapseThree
+                .accordion-inner
+                  %p<
+                    プログラマーズカフェは開催者の性格上、皆さまが思っている以上に
+                    %strong<> ゆるい
+                    です。
+                  %p<
+                    他の勉強会と違い、運営側が基本的にノープランなので
+                    %strong<> 過度な期待は禁物
+                    です。
+                  %p 参加される方によって内容がまるっきり変わるため、タブレットやノートPCを持参されると手持ち無沙汰が解消されます。仕事もできます。
+                  %p 常連者の志が低すぎるため、ムチを入れてくれる方を絶賛大募集です。
+          - @info.each do |row|
+            .row-fluid
+              - row.each do |column|
+                .span4
+                  %h3 #{column.message}
+                  %p #{column.description}
+                  %p<
+                    %a.btn.btn-small.btn-primary{href: column.link, target: "_blank"} #{column.name} &raquo;
+        .span4
+          .well.sidebar-nav
+            %ul.nav.nav-list.next-schedule
+              - @events.each_with_index do |event, i|
+                - if i == 0
+                  %li.nav-header 次のプログラマーズカフェは…
+                - if i == 1
+                  %li.nav-header 次回以降は…
+                %li<
+                  %p.next-schedule<
+                    #{event['dtstart'].strftime('%m月%d日')}
+                    - if event['url'] != ''
+                      %a.btn.btn-mini.btn-success{href: event['url'], target: "_blank"} ATND &raquo;
+          .row-fluid
+            %script{type: 'text/javascript', src: 'http://widgets.twimg.com/j/2/widget.js'}
+            :javascript
+              new TWTR.Widget({
+                version: 2,
+                type: 'search',
+                search: '#pgcafe',
+                interval: 20000,
+                title: 'プログラマーズカフェ',
+                subject: '#pgcafe',
+                width: 'auto',
+                height: 420,
+                theme: {
+                  shell: {
+                    background: '#8ec1da',
+                    color: '#ffffff'
+                  },
+                  tweets: {
+                    background: '#ffffff',
+                    color: '#444444',
+                    links: '#1985b5'
+                  }
+                },
+                features: {
+                  scrollbar: false,
+                  loop: true,
+                  live: true,
+                  behavior: 'default'
+                }
+              }).render().start();
+      .row-fluid
+        .span8
+          %h2#schedule Schedule
+          %iframe{width: "100%", height: "540px", frameborder: "0", scrolling: "no", marginheight: "0", marginwidth: "0", src: "https://www.google.com/calendar/embed?title=%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC&showTitle=0&height=600&wkst=1&hl=ja&bgcolor=%23FFFFFF&src=mroq255j953tfk6jsu2gf77trk%40group.calendar.google.com&color=%232952A3&ctz=Asia%2FTokyo"}
+        .span4
+          %h2#map Map
+          %iframe{width: "100%", height: "420px", frameborder: "0", scrolling: "no", marginheight: "0", marginwidth: "0", src: "https://maps.google.co.jp/maps?f=q&source=s_q&hl=ja&geocode=&q=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%803%E4%B8%81%E7%9B%AE32-3-305&aq=&sll=35.698883,139.56085&sspn=0.007998,0.010557&g=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%803-32-3-305&brcurrent=3,0x6018efb695ebbc89:0xffb58061a36d7c0c,0&ie=UTF8&hq=&hnear=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%80%EF%BC%93%E4%B8%81%E7%9B%AE%EF%BC%93%EF%BC%92%E2%88%92%EF%BC%93&ll=35.7008,139.56085&spn=0.001928,0.002427&t=m&z=16&output=embed&iwloc=B"}
+          %address 東京都三鷹市下連雀三丁目32-3-305
+          %p<
+            三鷹駅から徒歩5分の名取屋興産ビル3階 コワーキングプロジェクト
+            %a{href: "http://mitacafe.co/"} ミタカフェ
+            にて開催してます。
+          %a.btn.btn-info{href: "https://maps.google.co.jp/maps?f=q&source=embed&hl=ja&geocode=&q=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%803%E4%B8%81%E7%9B%AE32-3-305&aq=&sll=35.698883,139.56085&sspn=0.007711,0.008508&brcurrent=3,0x6018efb726b68c79:0x4a313c57f72e0be8,0,0x6018efb723e33b5b:0x6b933a0810a7cb60&ie=UTF8&hq=&hnear=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%80%EF%BC%93%E4%B8%81%E7%9B%AE%EF%BC%93%EF%BC%92%E2%88%92%EF%BC%93&t=m&z=17&ll=35.7008,139.56085", target: "_blank"} 大きな地図で見る &raquo;
+      %footer.footer
+        %h4 &copy; #{Date.today.year} プログラマーズカフェ
+        -#
+          %a.btn.btn-danger{href: "/deleteall"} Delete ALL &raquo;
+    %script{type: 'text/javascript', src: 'jquery/jquery-1.7.2.min.js'}
+    %script{type: 'text/javascript', src: 'bootstrap/js/bootstrap.min.js'}

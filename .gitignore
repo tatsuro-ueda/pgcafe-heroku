@@ -1,4 +1,7 @@
+/.bundle
+/db
+/log
+/tmp
 .env
-log/
-.rvmrc
+.sass-cache
 .DS_Store

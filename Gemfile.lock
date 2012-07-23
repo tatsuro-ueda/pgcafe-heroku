@@ -1,38 +1,82 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.2.7)
-    crack (0.1.8)
-    daemons (1.1.3)
-    eventmachine (0.12.10)
-    faraday (0.7.6)
-      addressable (~> 2.2)
-      multipart-post (~> 1.1)
-      rack (~> 1.1)
-    httparty (0.7.8)
-      crack (= 0.1.8)
-    json (1.5.4)
-    koala (1.3.0)
-      faraday (~> 0.7.0)
+    activemodel (3.2.6)
+      activesupport (= 3.2.6)
+      builder (~> 3.0.0)
+    activesupport (3.2.6)
+      i18n (~> 0.6)
       multi_json (~> 1.0)
-    multi_json (1.0.3)
+    addressable (2.3.1)
+    bson (1.6.4)
+    bson_ext (1.6.4)
+      bson (~> 1.6.4)
+    builder (3.0.0)
+    carrierwave (0.6.2)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+    carrierwave-mongoid (0.2.1)
+      carrierwave (~> 0.6.1)
+      mongoid (~> 2.1)
+    daemons (1.1.8)
+    dalli (2.1.0)
+    eventmachine (0.12.10)
+    faraday (0.8.1)
+      multipart-post (~> 1.1)
+    haml (3.1.6)
+    httparty (0.8.3)
+      multi_json (~> 1.0)
+      multi_xml
+    i18n (0.6.0)
+    icalendar (1.1.6)
+    json (1.7.3)
+    koala (1.5.0)
+      faraday (~> 0.7)
+      multi_json (~> 1.3)
+    memcachier (0.0.1)
+    mongo (1.6.2)
+      bson (~> 1.6.2)
+    mongoid (2.4.12)
+      activemodel (~> 3.1)
+      mongo (<= 1.6.2)
+      tzinfo (~> 0.3.22)
+    multi_json (1.3.6)
+    multi_xml (0.5.1)
     multipart-post (1.1.5)
-    rack (1.3.2)
-    sinatra (1.2.6)
-      rack (~> 1.1)
-      tilt (>= 1.2.2, < 2.0)
-    thin (1.2.11)
+    rack (1.4.1)
+    rack-cache (1.2)
+      rack (>= 0.4)
+    rack-protection (1.2.0)
+      rack
+    sass (3.1.20)
+    sinatra (1.3.2)
+      rack (~> 1.3, >= 1.3.6)
+      rack-protection (~> 1.2)
+      tilt (~> 1.3, >= 1.3.3)
+    thin (1.4.1)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     tilt (1.3.3)
+    tzinfo (0.3.33)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
+  bson_ext
+  carrierwave
+  carrierwave-mongoid
+  dalli
+  haml
   httparty
+  icalendar
   json
   koala
+  memcachier
+  mongoid (~> 2.4.12)
+  rack-cache
+  sass
   sinatra
   thin

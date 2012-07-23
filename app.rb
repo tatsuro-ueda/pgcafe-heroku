@@ -1,21 +1,50 @@
-require "sinatra"
+﻿require 'sinatra'
 require 'koala'
+
+require './lib/mongoid'
+require './models/info'
+require './models/event'
+
+require 'addressable/uri'
+require 'open-uri'
+require 'json'
+include Addressable
+
+# require 'icalendar'
+
+=begin
+require './lib/image_uploader'
+require './models/user'
+
+require './lib/serve_gridfs_image'
+
+use Rack::Lint
+use ServeGridfsImage
+=end
 
 enable :sessions
 set :raise_errors, false
 set :show_exceptions, false
+set :cache, Dalli::Client.new
+set :haml, :format => :html5
 
-# Scope defines what permissions that we are asking the user to grant.
-# In this example, we are asking for the ability to publish stories
-# about using the app, access to what the user likes, and to be able
-# to use their pictures.  You should rewrite this scope with whatever
-# permissions your app needs.
-# See https://developers.facebook.com/docs/reference/api/permissions/
-# for a full list of permissions
-FACEBOOK_SCOPE = 'user_likes,user_photos,user_photo_video_tags'
+if ENV['MEMCACHIER_SERVERS']
+  use Rack::Cache,
+    verbose:     true,
+    default_ttl: 60 * 60,
+    metastore:   Dalli::Client.new,
+    entitystore: ENV['MEMCACHIER_SERVERS'] ? "memcached://#{ENV['MEMCACHIER_SERVERS']}/body" : 'file:tmp/cache/rack/body',
+    allow_reload: false
+end
 
-unless ENV["FACEBOOK_APP_ID"] && ENV["FACEBOOK_SECRET"]
-  abort("missing env vars: please set FACEBOOK_APP_ID and FACEBOOK_SECRET with your app credentials")
+not_found do
+  redirect "/"
+end
+
+configure do
+  set :static_cache_control => [:public, :max_age => 60*60*24*30]
+  # load File.expand_path('../lib/mongoid.rb', __FILE__)
+  # load File.expand_path('../lib/carrierwave.rb', __FILE__)
 end
 
 before do
@@ -23,6 +52,13 @@ before do
   if settings.environment == :production && request.scheme != 'https'
     redirect "https://#{request.env['HTTP_HOST']}"
   end
+=begin
+  unless session[:date]
+    session[:date] = Date.today
+  end
+  @date = session[:date]
+  @wdays = ['日','月','火','水','木','金','土']
+=end
 end
 
 helpers do
@@ -41,36 +77,63 @@ helpers do
   def url(path = '')
     "#{scheme}://#{host}#{path}"
   end
-
-  def authenticator
-    @authenticator ||= Koala::Facebook::OAuth.new(ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_SECRET"], url("/auth/facebook/callback"))
+  
+  def events
+    events = Event.where(:category => 'atnd')
+    @events = events.sort_by{ |item| item['dtstart'].to_i }
   end
-
-end
-
-# the facebook session expired! reset ours and restart the process
-error(Koala::Facebook::APIError) do
-  session[:access_token] = nil
-  redirect "/auth/facebook"
+  
+  def search_all
+    @info = []
+    Info.all_of(object: 'link').each_with_index do |info, i|
+      @info[i/3] = [] if i % 3 == 0
+      @info[i/3][i%3] = info
+    end
+    
+=begin
+    Event.all_of(category: 'google').each do |event|
+      p rrule = event.rrule.scan(/(\w+)\=([\w,]+)/)
+      case rrule.assoc("FREQ")[1]
+      when "WEEKLY"
+        rrule.assoc("UNTIL")
+      end
+    end
+=end
+=begin
+      p event.name
+      p event.description
+      p event.dtstart
+      p event.dtend
+      p event.rrule.scan(/(\w+)\=([\w,]+)/)
+=end
+  end
+  
+  def get_google_calendar
+    url = "https://www.google.com/calendar/ical/mroq255j953tfk6jsu2gf77trk%40group.calendar.google.com/public/basic.ics"
+    uri = URI.parse(url)
+    ical = open(uri).read
+    cal = Icalendar.parse(ical, true)
+    cal.events.each do |event|
+      p event.summary
+      p event.dtstart
+      p event.dtend
+      p event.description
+      r = ""
+      event.recurrence_rules.map do |rule|
+        p rule.orig_value.scan(/(\w+)\=([\w,]+)/)
+        r << rule.orig_value.to_s
+      end
+    end
+  end
 end
 
 get "/" do
-  # Get base API Connection
-  @graph  = Koala::Facebook::API.new(session[:access_token])
-
-  # Get public details of current application
-  @app  =  @graph.get_object(ENV["FACEBOOK_APP_ID"])
-
-  if session[:access_token]
-    @user    = @graph.get_object("me")
-    @friends = @graph.get_connections('me', 'friends')
-    @photos  = @graph.get_connections('me', 'photos')
-    @likes   = @graph.get_connections('me', 'likes').first(4)
-
-    # for other data you can always run fql
-    @friends_using_app = @graph.fql_query("SELECT uid, name, is_app_user, pic_square FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = me()) AND is_app_user = 1")
-  end
-  erb :index
+  events
+  search_all
+#  get_google_calendar
+  
+  sass :style
+  haml :index 
 end
 
 # used by Canvas apps - redirect the POST to be a regular GET
@@ -78,22 +141,18 @@ post "/" do
   redirect "/"
 end
 
-# used to close the browser window opened to post to wall/send to friends
-get "/close" do
-  "<body onload='window.close();'/>"
+get '/index.html' do
+  haml :index
 end
 
-get "/sign_out" do
-  session[:access_token] = nil
+get '/style.css' do
+  sass :style
+end
+
+=begin
+get '/daleteall' do
+  Event.destroy_all
+#  Info.destroy_all
   redirect '/'
 end
-
-get "/auth/facebook" do
-  session[:access_token] = nil
-  redirect authenticator.url_for_oauth_code(:permissions => FACEBOOK_SCOPE)
-end
-
-get '/auth/facebook/callback' do
-	session[:access_token] = authenticator.get_access_token(params[:code])
-	redirect '/'
-end
+=end
