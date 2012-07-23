@@ -59,7 +59,6 @@ class GetInfoFromFacebook
   URL = "https://graph.facebook.com/oauth/access_token?client_id=#{FB_APP_ID}&client_secret=#{FB_SECRET}&grant_type=client_credentials"
   
   def initialize
-    Info.destroy_all
     Facebook.destroy_all
     uri = URI.parse(URL)
     open(uri).read.match(/=/)
