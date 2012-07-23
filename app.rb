@@ -67,7 +67,7 @@ helpers do
   end
   
   def events
-    @events ||= settings.cache.fetch(Date.today.to_s) do
+    @events ||= settings.cache.fetch("events_#{Date.today.to_s}") do
       events = Event.where(category: 'atnd')
       events = events.sort_by{ |item| item['dtstart'].to_i}
       settings.cache.set(Date.today.to_s, events, 60*60*24)
@@ -80,7 +80,7 @@ helpers do
   end
   
   def infomation
-    @info ||= settings.cache.fetch(Date.today.to_s) do
+    @info ||= settings.cache.fetch("info_#{Date.today.to_s}") do
       info = []
       Info.all_of(object: 'link').each_with_index do |item, i|
         info[i/3] = [] if i % 3 == 0
