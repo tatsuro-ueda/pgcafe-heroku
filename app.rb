@@ -93,7 +93,7 @@ helpers do
 end
 
 get "/" do
-#  cache_control :public, max_age: 60 * 60 * 24
+  cache_control :public, max_age: 60 * 60 * 24
   
   events
   infomation
