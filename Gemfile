@@ -19,5 +19,5 @@ gem 'rack-cache', require: 'rack/cache'
 gem 'memcachier'
 gem 'dalli'
 
-gem 'icalendar'
+# gem 'icalendar'
 gem 'addressable'
