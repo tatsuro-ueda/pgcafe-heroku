@@ -48,10 +48,11 @@ configure do
 end
 
 before do
-  # HTTPS redirect
+=begin
   if settings.environment == :production && request.scheme != 'https'
     redirect "https://#{request.env['HTTP_HOST']}"
   end
+=end
 =begin
   unless session[:date]
     session[:date] = Date.today
