@@ -31,7 +31,7 @@ set :haml, :format => :html5
 if ENV['MEMCACHIER_SERVERS']
   use Rack::Cache,
     verbose: true,
-    default_ttl: 60 * 10,
+    default_ttl: 60 * 60 * 24,
     metastore: Dalli::Client.new(ENV["MEMCACHIER_SERVERS"], {username: ENV["MEMCACHIER_USERNAME"], password: ENV["MEMCACHIER_PASSWORD"]}),
     entitystore: ENV['MEMCACHIER_SERVERS'] ? "memcached://#{ENV['MEMCACHIER_SERVERS']}/body" : 'file:tmp/cache/rack/body',
     allow_reload: false
