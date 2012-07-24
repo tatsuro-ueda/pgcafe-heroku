@@ -9,11 +9,25 @@
     %link{rel: 'icon', href: 'images/favicon.ico', type: 'image/x-icon'}
     %link{rel: 'shortcut icon', href: 'images/favicon.ico', type: 'image/x-icon'}
     %link{rel: 'stylesheet', href: 'bootstrap/css/bootstrap.min.css', type: 'text/css'}
-    %link{rel: 'stylesheet', href: 'bootstrap/css/bootstrap-responsive.min.css', type: 'text/css'}
     %link{rel: 'stylesheet', href: 'style.css', type: 'text/css'}
+    %link{rel: 'stylesheet', href: 'bootstrap/css/bootstrap-responsive.min.css', type: 'text/css'}
     /[if IE]
       %script{type: 'text/javascript', src: 'http://html5shim.googlecode.com/svn/trunk/html5.js'}
   %body
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container-fluid
+          %a.btn.btn-navbar{:'data-toggle' => 'collapse', :'data-target' => '.nav-collapse'}
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.brand{href: '/'} pgcafe
+          .nav-collapse
+            %ul.nav
+              %li.active
+                %a{href: '/'} Home
+              %li.active
+                %a{href: '/more.html'} More
     .container
       .row-fluid
         .hero-unit.title
@@ -36,7 +50,7 @@
                   %p<
                     場所：コワーキングプロジェクト
                     %a{href: "http://mitacafe.co/"} ミタカフェ
-                    %a.btn.btn-mini.btn-info{href: "#map"} 地図 &raquo;
+                    %a.btn.btn-mini.btn-info{href: "more.html#map"} 地図 &raquo;
                   %p<
                     料金：
                     %a{href: "http://www.mitaka.ne.jp/", target: "_blank"}<> まちづくり三鷹
@@ -132,19 +146,6 @@
                   behavior: 'default'
                 }
               }).render().start();
-      .row-fluid
-        .span8
-          %h2#schedule Schedule
-          %iframe{width: "100%", height: "540px", frameborder: "0", scrolling: "no", marginheight: "0", marginwidth: "0", src: "https://www.google.com/calendar/embed?title=%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC&showTitle=0&height=600&wkst=1&hl=ja&bgcolor=%23FFFFFF&src=mroq255j953tfk6jsu2gf77trk%40group.calendar.google.com&color=%232952A3&ctz=Asia%2FTokyo"}
-        .span4
-          %h2#map Map
-          %iframe{width: "100%", height: "420px", frameborder: "0", scrolling: "no", marginheight: "0", marginwidth: "0", src: "https://maps.google.co.jp/maps?f=q&source=s_q&hl=ja&geocode=&q=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%803%E4%B8%81%E7%9B%AE32-3-305&aq=&sll=35.698883,139.56085&sspn=0.007998,0.010557&g=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%803-32-3-305&brcurrent=3,0x6018efb695ebbc89:0xffb58061a36d7c0c,0&ie=UTF8&hq=&hnear=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%80%EF%BC%93%E4%B8%81%E7%9B%AE%EF%BC%93%EF%BC%92%E2%88%92%EF%BC%93&ll=35.7008,139.56085&spn=0.001928,0.002427&t=m&z=16&output=embed&iwloc=B"}
-          %address 東京都三鷹市下連雀三丁目32-3-305
-          %p<
-            三鷹駅から徒歩5分の名取屋興産ビル3階 コワーキングプロジェクト
-            %a{href: "http://mitacafe.co/"} ミタカフェ
-            にて開催してます。
-          %a.btn.btn-info{href: "https://maps.google.co.jp/maps?f=q&source=embed&hl=ja&geocode=&q=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%803%E4%B8%81%E7%9B%AE32-3-305&aq=&sll=35.698883,139.56085&sspn=0.007711,0.008508&brcurrent=3,0x6018efb726b68c79:0x4a313c57f72e0be8,0,0x6018efb723e33b5b:0x6b933a0810a7cb60&ie=UTF8&hq=&hnear=%E6%9D%B1%E4%BA%AC%E9%83%BD%E4%B8%89%E9%B7%B9%E5%B8%82%E4%B8%8B%E9%80%A3%E9%9B%80%EF%BC%93%E4%B8%81%E7%9B%AE%EF%BC%93%EF%BC%92%E2%88%92%EF%BC%93&t=m&z=17&ll=35.7008,139.56085", target: "_blank"} 大きな地図で見る &raquo;
       %footer.footer
         %h4 &copy; #{Date.today.year} プログラマーズカフェ
         -#

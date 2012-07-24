@@ -110,6 +110,10 @@ get '/index.html' do
   haml :index
 end
 
+get '/more.html' do
+  haml :more
+end
+
 get '/style.css' do
   sass :style
 end
