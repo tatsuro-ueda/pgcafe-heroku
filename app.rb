@@ -28,7 +28,6 @@ set :show_exceptions, false
 set :cache, Dalli::Client.new(ENV["MEMCACHIER_SERVERS"], {username: ENV["MEMCACHIER_USERNAME"], password: ENV["MEMCACHIER_PASSWORD"]})
 set :haml, :format => :html5
 
-=begin
 if ENV['MEMCACHIER_SERVERS']
   use Rack::Cache,
     verbose: true,
@@ -37,7 +36,6 @@ if ENV['MEMCACHIER_SERVERS']
     entitystore: ENV['MEMCACHIER_SERVERS'] ? "memcached://#{ENV['MEMCACHIER_SERVERS']}/body" : 'file:tmp/cache/rack/body',
     allow_reload: false
 end
-=end
 
 not_found do
   redirect "/"
