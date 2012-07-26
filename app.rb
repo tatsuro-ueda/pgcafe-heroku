@@ -25,15 +25,15 @@ use ServeGridfsImage
 enable :sessions
 set :raise_errors, false
 set :show_exceptions, false
-set :cache, Dalli::Client.new(ENV["MEMCACHIER_SERVERS"], {username: ENV["MEMCACHIER_USERNAME"], password: ENV["MEMCACHIER_PASSWORD"]})
+set :cache, Dalli::Client.new(ENV["MEMCACHE_SERVERS"], {username: ENV["MEMCACHE_USERNAME"], password: ENV["MEMCACHE_PASSWORD"]})
 set :haml, :format => :html5
 
 if ENV['MEMCACHIER_SERVERS']
   use Rack::Cache,
     verbose: true,
-    default_ttl: 60 * 60 * 24,
-    metastore: Dalli::Client.new(ENV["MEMCACHIER_SERVERS"], {username: ENV["MEMCACHIER_USERNAME"], password: ENV["MEMCACHIER_PASSWORD"]}),
-    entitystore: ENV['MEMCACHIER_SERVERS'] ? "memcached://#{ENV['MEMCACHIER_SERVERS']}/body" : 'file:tmp/cache/rack/body',
+    default_ttl: 60*60*12,
+    metastore: ENV['MEMCACHE_SERVERS'] ? "memcached://#{ENV['MEMCACHE_SERVERS']}/meta" : 'file:tmp/cache/rack/meta',
+    entitystore: ENV['MEMCACHE_SERVERS'] ? "memcached://#{ENV['MEMCACHE_SERVERS']}/body" : 'file:tmp/cache/rack/body',
     allow_reload: false
 end
 
@@ -50,22 +50,6 @@ before do
 end
 
 helpers do
-  def host
-    request.env['HTTP_HOST']
-  end
-
-  def scheme
-    request.scheme
-  end
-
-  def url_no_scheme(path = '')
-    "//#{host}#{path}"
-  end
-
-  def url(path = '')
-    "#{scheme}://#{host}#{path}"
-  end
-  
   def events
     @events ||= settings.cache.fetch("events_#{Date.today.to_s}") do
       events = Event.where(category: 'atnd')
