@@ -14,7 +14,7 @@ task :get_event_from_google_calendar do
   require './lib/mongoid'
   require './models/event'
 #  GetEventFromGoogleCalendar.new
-  puts 'it not working.'
+  puts 'its not working!'
 end
 
 

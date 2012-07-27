@@ -1,0 +1,4 @@
+h1. "プログラマーズカフェ":http://pgcafe.herokuapp.com/ で使ってるファイルそのまんまアプ
+
+"Sinatra":http://www.sinatrarb.com/ "Heroku":http://www.heroku.com/ "Mongoid":http://mongoid.org/ ら辺のサンプルになるんじゃねーかな？と。
+まあ細かいとこはコード見てちょ

@@ -8,5 +8,4 @@ class Event
   field :dtstart, :type => Date
   field :dtend, :type => Date
   field :url
-  #mount_uploader :fb_picture, ImageUploader, type: String
 end

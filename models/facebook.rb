@@ -7,4 +7,6 @@ class Facebook
   field :description
   field :link
   field :date, :type => Date
+  
+  #mount_uploader :fb_picture, ImageUploader, type: String
 end

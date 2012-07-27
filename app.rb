@@ -14,7 +14,6 @@ include Addressable
 
 =begin
 require './lib/image_uploader'
-require './models/user'
 
 require './lib/serve_gridfs_image'
 
@@ -51,10 +50,10 @@ end
 
 helpers do
   def events
-    @events ||= settings.cache.fetch("events_#{Date.today.to_s}") do
+    @events ||= settings.cache.fetch("events_#{Time.now.strftime('%Y-%m-%d')}") do
       events = Event.where(category: 'atnd')
       events = events.sort_by{ |item| item['dtstart'].to_i}
-      settings.cache.set("events_#{Date.today.to_s}", events, 60*60*24)
+      settings.cache.set("events_#{Time.now.strftime('%Y-%m-%d')}", events, 60*60*24)
       events
     end
   end
@@ -64,20 +63,20 @@ helpers do
   end
   
   def facebook
-    @facebook ||= settings.cache.fetch("facebook_#{Date.today.to_s}") do
+    @facebook ||= settings.cache.fetch("facebook_#{Time.now.strftime('%Y-%m-%d')}") do
       facebook = []
       Facebook.all_of(object: 'link').each_with_index do |item, i|
         facebook[i/3] = [] if i % 3 == 0
         facebook[i/3][i%3] = item
       end
-      settings.cache.set("facebook_#{Date.today.to_s}", facebook, 60*60*24)
+      settings.cache.set("facebook_#{Time.now.strftime('%Y-%m-%d')}", facebook, 60*60*24)
       facebook
     end
   end
 end
 
 get "/" do
-  cache_control :public, max_age: 60 * 60 * 24
+  cache_control :public, max_age: 60*60*24
   
   events
   facebook
