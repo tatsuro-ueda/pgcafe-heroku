@@ -1,4 +1,4 @@
-﻿require 'sinatra'
+require 'sinatra'
 require 'koala'
 
 require './lib/mongoid'
@@ -21,7 +21,9 @@ use Rack::Lint
 use ServeGridfsImage
 =end
 
+# セッション管理
 enable :sessions
+
 set :raise_errors, false
 set :show_exceptions, false
 set :cache, Dalli::Client.new(ENV["MEMCACHE_SERVERS"], {username: ENV["MEMCACHE_USERNAME"], password: ENV["MEMCACHE_PASSWORD"]})
@@ -36,6 +38,7 @@ if ENV['MEMCACHIER_SERVERS']
     allow_reload: false
 end
 
+# 宛先のないリクエストはルートへ
 not_found do
   redirect "/"
 end
@@ -49,6 +52,7 @@ before do
 end
 
 helpers do
+  # ATND関係のキャッシュがあれば、それを使う
   def events
     @events ||= settings.cache.fetch("events_#{Time.now.strftime('%Y-%m-%d')}") do
       events = Event.where(category: 'atnd')
@@ -58,6 +62,7 @@ helpers do
     end
   end
   
+  # キャッシュがなければ新規で呼ぶ
   def events_no_cache
     @events = Event.where(category: 'atnd')
   end
